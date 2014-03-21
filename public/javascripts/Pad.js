@@ -150,7 +150,7 @@ function drawLine(mouseEvent, sigCanvas, context) {
 function drawOnePixel(mouseEvent, sigCanvas, context) {
     var position = getPosition(mouseEvent, sigCanvas);
 
-    context.lineTo(position.X+1, position.Y);
+    context.lineTo(position.X-1, position.Y);
     context.stroke();
 }
 
