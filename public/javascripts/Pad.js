@@ -1,7 +1,7 @@
 $(document).ready(function () {
-         initialize();
-      });
- 
+   initialize();
+});
+   
 
       // works out the X, Y position of the click inside the canvas from the X, Y position on the page
       function getPosition(mouseEvent, sigCanvas) {
@@ -96,24 +96,56 @@ $(document).ready(function () {
  
                context.moveTo(position.X, position.Y);
                context.beginPath();
- 
+               
+               console.log("MOUSE IS DOWN");
                // attach event handlers
                $(this).mousemove(function (mouseEvent) {
+                  console.log("mouse movment");
                   drawLine(mouseEvent, sigCanvas, context);
                }).mouseup(function (mouseEvent) {
+                  console.log("MOUSE UP INSIDE CANVAS")
                   finishDrawing(mouseEvent, sigCanvas, context);
                }).mouseout(function (mouseEvent) {
-                  finishDrawing(mouseEvent, sigCanvas, context);
+                  console.log("mouse out");
+                  drawUponExitingCanvas(mouseEvent, sigCanvas, context);
+                  // finishDrawing(mouseEvent, sigCanvas, context);
+               }).mouseover(function (mouseEvent) {
+                  console.log("mouse over");
+                  drawUponReenter(mouseEvent, sigCanvas, context);
+               })
+               //mouse press is released outside of canvas
+               $(document).mouseup(function(mouseEvent) {
+                  console.log("DOCUMENT mouse up")
+                  finish(mouseEvent, sigCanvas, context);
                });
             });
- 
          }
+      }
+
+      function finish(mouseEvent, sigCanvas, context) {
+         context.closePath();
+
+         $(sigCanvas).unbind("mousemove")
+            .unbind("mouseup")
+            .unbind("mouseout")
+            .unbind("mouseover");
+         $(document).unbind("mouseup");
+      }
+
+      function drawUponReenter(mouseEvent, sigCanvas, context) {
+         var position = getPosition(mouseEvent, sigCanvas);
+
+         context.moveTo(position.X, position.Y);
+         drawLine(mouseEvent, sigCanvas, context);
+      }
+
+      function drawUponExitingCanvas(mouseEvent, sigCanvas, context) {
+         drawLine(mouseEvent, sigCanvas, context);
       }
  
       // draws a line to the x and y coordinates of the mouse event inside
       // the specified element using the specified context
       function drawLine(mouseEvent, sigCanvas, context) {
- 
          var position = getPosition(mouseEvent, sigCanvas);
  
          context.lineTo(position.X, position.Y);
@@ -127,10 +159,5 @@ $(document).ready(function () {
          // draw the line to the finishing coordinates
          drawLine(mouseEvent, sigCanvas, context);
  
-         context.closePath();
- 
-         // unbind any events which could draw
-         $(sigCanvas).unbind("mousemove")
-                     .unbind("mouseup")
-                     .unbind("mouseout");
+         finish(mouseEvent, sigCanvas, context);
       }
