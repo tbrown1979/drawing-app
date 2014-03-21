@@ -96,6 +96,8 @@ function initialize() {
 
          context.moveTo(position.X, position.Y);
          context.beginPath();
+
+         drawOnePixel(mouseEvent, sigCanvas, context);
          
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
@@ -143,6 +145,13 @@ function drawLine(mouseEvent, sigCanvas, context) {
 
    context.lineTo(position.X, position.Y);
    context.stroke();
+}
+
+function drawOnePixel(mouseEvent, sigCanvas, context) {
+    var position = getPosition(mouseEvent, sigCanvas);
+
+    context.lineTo(position.X+1, position.Y);
+    context.stroke();
 }
 
 // draws a line from the last coordiantes in the path to the finishing
