@@ -39,8 +39,15 @@ app.get('/users', user.list);
 // });
 server.listen(port);
 
+require('./public/javascripts/Pad.js');
+
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
+  // socket.emit('draw', { initialX: 0, initialY: 0,
+  //                       endX: 300, endY: 300 });
+  socket.on('draw', function(data) {
+    socket.broadcast.emit('draw', data);
+  });
+
   socket.on('my other event', function (data) {
     console.log(data);
   });

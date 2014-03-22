@@ -1,8 +1,3 @@
-$(document).ready(function () {
-   initialize();
-});
-   
-
 // works out the X, Y position of the click inside the canvas from the X, Y position on the page
 function getPosition(mouseEvent, sigCanvas) {
    var x, y;
@@ -95,19 +90,25 @@ function initialize() {
          var position = getPosition(mouseEvent, sigCanvas);
 
          context.moveTo(position.X, position.Y);
+         var prevPosition = { x: position.X, y: position.Y };
          context.beginPath();
+         console.log(sigCanvas);
 
          drawOnePixel(mouseEvent, sigCanvas, context);
          
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
-            drawLine(mouseEvent, sigCanvas, context);
+            drawLine(mouseEvent, sigCanvas, context, prevPosition);
+            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseup(function (mouseEvent) {
-            finishDrawing(mouseEvent, sigCanvas, context);
+            finishDrawing(mouseEvent, sigCanvas, context, prevPosition);
+            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseout(function (mouseEvent) {
-            drawUponExitingCanvas(mouseEvent, sigCanvas, context);
+            drawUponExitingCanvas(mouseEvent, sigCanvas, context, prevPosition);
+            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseover(function (mouseEvent) {
-            drawUponReenter(mouseEvent, sigCanvas, context);
+            drawUponReenter(mouseEvent, sigCanvas, context, prevPosition);
+            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          })
          //mouse press is released outside of canvas
          $(document).mouseup(function(mouseEvent) {
@@ -115,6 +116,12 @@ function initialize() {
          });
       });
    }
+}
+
+function updatePrevPosition(mouseEvent, sigCanvas) {
+   var position = getPosition(mouseEvent, sigCanvas);
+
+   return { x: position.X, y: position.Y };
 }
 
 function finish(mouseEvent, sigCanvas, context) {
@@ -127,27 +134,30 @@ function finish(mouseEvent, sigCanvas, context) {
    $(document).unbind("mouseup");
 }
 
-function drawUponReenter(mouseEvent, sigCanvas, context) {
+function drawUponReenter(mouseEvent, sigCanvas, context, prevPosition) {
    var position = getPosition(mouseEvent, sigCanvas);
 
    context.moveTo(position.X, position.Y);
-   drawLine(mouseEvent, sigCanvas, context);
+   drawLine(mouseEvent, sigCanvas, context, prevPosition);
 }
 
-function drawUponExitingCanvas(mouseEvent, sigCanvas, context) {
-   drawLine(mouseEvent, sigCanvas, context);
+function drawUponExitingCanvas(mouseEvent, sigCanvas, context, prevPosition) {
+   drawLine(mouseEvent, sigCanvas, context, prevPosition);
 }
 
 // draws a line to the x and y coordinates of the mouse event inside
 // the specified element using the specified context
-function drawLine(mouseEvent, sigCanvas, context) {
+function drawLine(mouseEvent, sigCanvas, context, prevPosition) {
    var position = getPosition(mouseEvent, sigCanvas);
-
+   socket.emit('draw', {initialX: prevPosition.x,
+                        initialY: prevPosition.y,
+                        endX: position.X,
+                        endY: position.Y});
    context.lineTo(position.X, position.Y);
    context.stroke();
 }
 
-function drawOnePixel(mouseEvent, sigCanvas, context) {
+function drawOnePixel(mouseEvent, sigCanvas, context, prevPosition) {
     var position = getPosition(mouseEvent, sigCanvas);
 
     context.lineTo(position.X-1, position.Y);
@@ -157,9 +167,9 @@ function drawOnePixel(mouseEvent, sigCanvas, context) {
 // draws a line from the last coordiantes in the path to the finishing
 // coordinates and unbind any event handlers which need to be preceded
 // by the mouse down event
-function finishDrawing(mouseEvent, sigCanvas, context) {
+function finishDrawing(mouseEvent, sigCanvas, context, prevPosition) {
    // draw the line to the finishing coordinates
-   drawLine(mouseEvent, sigCanvas, context);
+   drawLine(mouseEvent, sigCanvas, context, prevPosition);
 
    finish(mouseEvent, sigCanvas, context);
 }
