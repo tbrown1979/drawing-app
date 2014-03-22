@@ -98,6 +98,7 @@ function initialize() {
          
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
+            context.moveTo(prevPosition.x, prevPosition.y);
             drawLine(mouseEvent, sigCanvas, context, prevPosition);
             prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseup(function (mouseEvent) {
@@ -153,7 +154,6 @@ function drawLine(mouseEvent, sigCanvas, context, prevPosition) {
                         initialY: prevPosition.y,
                         endX: position.X,
                         endY: position.Y});
-   context.moveTo(prevPosition.x, prevPosition.y);
    context.lineTo(position.X, position.Y);
    context.stroke();
 }
