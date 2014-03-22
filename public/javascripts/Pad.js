@@ -153,6 +153,7 @@ function drawLine(mouseEvent, sigCanvas, context, prevPosition) {
                         initialY: prevPosition.y,
                         endX: position.X,
                         endY: position.Y});
+   context.moveTo(prevPosition.x, prevPosition.y);
    context.lineTo(position.X, position.Y);
    context.stroke();
 }
