@@ -100,6 +100,7 @@ function initialize() {
          $(this).mousemove(function (mouseEvent) {
             context.moveTo(prevPosition.x, prevPosition.y);
             drawLine(mouseEvent, sigCanvas, context, prevPosition);
+            event.preventDefault();
             prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseup(function (mouseEvent) {
             finishDrawing(mouseEvent, sigCanvas, context, prevPosition);
