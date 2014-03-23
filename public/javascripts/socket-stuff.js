@@ -6,7 +6,6 @@ socket.on('news', function (data) {
 
 
 socket.on('draw', function (data) {
-    console.log(data);
     sigCanvas = document.getElementById("canvasSignature");
     context = sigCanvas.getContext("2d");
     context.beginPath();

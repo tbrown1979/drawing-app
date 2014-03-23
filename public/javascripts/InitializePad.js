@@ -1,4 +1,5 @@
 $(document).ready(function () {
     console.log("STARTED");
-   initialize();
+    var drawingPad = new DrawingPad("canvasSignature");
+    drawingPad.initialize();
 });

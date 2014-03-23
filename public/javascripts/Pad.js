@@ -1,5 +1,12 @@
 // works out the X, Y position of the click inside the canvas from the X, Y position on the page
-function getPosition(mouseEvent, sigCanvas) {
+
+function DrawingPad(canvasId) {
+   this.canvas = document.getElementById(canvasId);
+   this.context = this.canvas.getContext("2d");
+   this.strokeStyle = 'Black';
+}
+
+DrawingPad.prototype.getPosition = function (mouseEvent) {
    var x, y;
    if (mouseEvent.pageX != undefined && mouseEvent.pageY != undefined) {
       x = mouseEvent.pageX;
@@ -9,10 +16,10 @@ function getPosition(mouseEvent, sigCanvas) {
       y = mouseEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop;
    }
 
-   return { X: x - sigCanvas.offsetLeft, Y: y - sigCanvas.offsetTop };
+   return { X: x - this.canvas.offsetLeft, Y: y - this.canvas.offsetTop };
 }
 
-function initialize() {
+DrawingPad.prototype.initialize = function () {
    // get references to the canvas element as well as the 2D drawing context
    var sigCanvas = document.getElementById("canvasSignature");
    var context = sigCanvas.getContext("2d");
@@ -46,13 +53,11 @@ function initialize() {
 
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
-
          // get the touch coordinates.  Using the first touch in case of multi-touch
          var coors = {
             x: event.targetTouches[0].pageX,
             y: event.targetTouches[0].pageY
          };
-
          // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
 
@@ -62,15 +67,14 @@ function initialize() {
                coors.x -= obj.offsetLeft;
                coors.y -= obj.offsetTop;
             }
-                    // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
-                    // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
+           // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
+           // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
             while ((obj = obj.offsetParent) != null);
          }
 
          // pass the coordinates to the appropriate handler
          drawer[event.type](coors);
       }
-
 
       // attach the touchstart, touchmove, touchend event listeners.
       sigCanvas.addEventListener('touchstart', draw, false);
@@ -83,95 +87,88 @@ function initialize() {
       }, false); 
    }
    else {
-
       // start drawing when the mousedown event fires, and attach handlers to
       // draw a line to wherever the mouse moves to
+      var drawingPad = this;
       $("#canvasSignature").mousedown(function (mouseEvent) {
-         var position = getPosition(mouseEvent, sigCanvas);
+         var position = drawingPad.getPosition(mouseEvent);
 
-         context.moveTo(position.X, position.Y);
+         drawingPad.context.moveTo(position.X, position.Y);
          var prevPosition = { x: position.X, y: position.Y };
-         context.beginPath();
-         console.log(sigCanvas);
+         drawingPad.context.beginPath();
 
-         drawOnePixel(mouseEvent, sigCanvas, context);
+         drawingPad.drawOnePixel(mouseEvent, sigCanvas, context);
          
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
-            context.moveTo(prevPosition.x, prevPosition.y);
-            drawLine(mouseEvent, sigCanvas, context, prevPosition);
+            drawingPad.context.moveTo(prevPosition.x, prevPosition.y);
+            drawingPad.drawLine(mouseEvent, prevPosition);
             event.preventDefault();
-            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
+            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseup(function (mouseEvent) {
-            finishDrawing(mouseEvent, sigCanvas, context, prevPosition);
-            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.finishDrawing(mouseEvent, prevPosition);
+            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseout(function (mouseEvent) {
-            drawUponExitingCanvas(mouseEvent, sigCanvas, context, prevPosition);
-            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.drawUponExitingCanvas(mouseEvent, prevPosition);
+            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
          }).mouseover(function (mouseEvent) {
-            drawUponReenter(mouseEvent, sigCanvas, context, prevPosition);
-            prevPosition = updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.drawUponReenter(mouseEvent, prevPosition);
+            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
          })
          //mouse press is released outside of canvas
          $(document).mouseup(function(mouseEvent) {
-            finish(mouseEvent, sigCanvas, context);
+            drawingPad.finish(mouseEvent);
          });
       });
    }
 }
 
-function updatePrevPosition(mouseEvent, sigCanvas) {
-   var position = getPosition(mouseEvent, sigCanvas);
+DrawingPad.prototype.updatePrevPosition = function (mouseEvent) {
+   var position = this.getPosition(mouseEvent);
 
    return { x: position.X, y: position.Y };
 }
 
-function finish(mouseEvent, sigCanvas, context) {
-   context.closePath();
+DrawingPad.prototype.finish = function (mouseEvent) {
+   this.context.closePath();
 
-   $(sigCanvas).unbind("mousemove")
+   $(this.canvas).unbind("mousemove")
       .unbind("mouseup")
       .unbind("mouseout")
       .unbind("mouseover");
    $(document).unbind("mouseup");
 }
 
-function drawUponReenter(mouseEvent, sigCanvas, context, prevPosition) {
-   var position = getPosition(mouseEvent, sigCanvas);
+DrawingPad.prototype.drawUponReenter = function (mouseEvent, prevPosition) {
+   var position = this.getPosition(mouseEvent);
 
-   context.moveTo(position.X, position.Y);
-   drawLine(mouseEvent, sigCanvas, context, prevPosition);
+   this.context.moveTo(position.X, position.Y);
+   this.drawLine(mouseEvent, sigCanvas, context, prevPosition);
 }
 
-function drawUponExitingCanvas(mouseEvent, sigCanvas, context, prevPosition) {
-   drawLine(mouseEvent, sigCanvas, context, prevPosition);
+DrawingPad.prototype.drawUponExitingCanvas = function (mouseEvent, prevPosition) {
+   this.drawLine(mouseEvent, prevPosition);
 }
 
-// draws a line to the x and y coordinates of the mouse event inside
-// the specified element using the specified context
-function drawLine(mouseEvent, sigCanvas, context, prevPosition) {
-   var position = getPosition(mouseEvent, sigCanvas);
+DrawingPad.prototype.drawLine = function (mouseEvent, prevPosition) {
+   var position = this.getPosition(mouseEvent);
    socket.emit('draw', {initialX: prevPosition.x,
                         initialY: prevPosition.y,
                         endX: position.X,
                         endY: position.Y});
-   context.lineTo(position.X, position.Y);
-   context.stroke();
+   this.context.lineTo(position.X, position.Y);
+   this.context.stroke();
 }
 
-function drawOnePixel(mouseEvent, sigCanvas, context, prevPosition) {
-    var position = getPosition(mouseEvent, sigCanvas);
+DrawingPad.prototype.drawOnePixel = function (mouseEvent, prevPosition) {
+   var position = this.getPosition(mouseEvent);
 
-    context.lineTo(position.X-1, position.Y);
-    context.stroke();
+   this.context.lineTo(position.X-1, position.Y);
+   this.context.stroke();
 }
 
-// draws a line from the last coordiantes in the path to the finishing
-// coordinates and unbind any event handlers which need to be preceded
-// by the mouse down event
-function finishDrawing(mouseEvent, sigCanvas, context, prevPosition) {
-   // draw the line to the finishing coordinates
-   drawLine(mouseEvent, sigCanvas, context, prevPosition);
+DrawingPad.prototype.finishDrawing = function (mouseEvent, prevPosition) {
+   this.drawLine(mouseEvent, prevPosition);
 
-   finish(mouseEvent, sigCanvas, context);
+   this.finish(mouseEvent);
 }
