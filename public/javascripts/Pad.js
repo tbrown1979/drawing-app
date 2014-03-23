@@ -143,7 +143,7 @@ DrawingPad.prototype.drawUponReenter = function (mouseEvent, prevPosition) {
    var position = this.getPosition(mouseEvent);
 
    this.context.moveTo(position.X, position.Y);
-   this.drawLine(mouseEvent, sigCanvas, context, prevPosition);
+   this.drawLine(mouseEvent, prevPosition);
 }
 
 DrawingPad.prototype.drawUponExitingCanvas = function (mouseEvent, prevPosition) {
