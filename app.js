@@ -26,15 +26,6 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-io.configure('production', function(){
-  io.enable('browser client minification');  // send minified client
-  io.enable('browser client etag');          // apply etag caching logic based on version number
-  io.enable('browser client gzip');          // gzip the file
-  io.set('log level', 1);                    // reduce logging
-  // enable all transports (optional if you want flashsocket)
-  io.set('transports', [ 'websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
-});
-
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -46,13 +37,24 @@ app.get('/users', user.list);
 // http.createServer(app).listen(app.get('port'), function(){
 //   console.log('Express server listening on port ' + app.get('port'));
 // });
+
+
+//socket.io
+io.configure('production', function(){
+  io.enable('browser client minification');  // send minified client
+  io.enable('browser client etag');          // apply etag caching logic based on version number
+  io.enable('browser client gzip');          // gzip the file
+  io.set('log level', 1);                    // reduce logging
+  // enable all transports (optional if you want flashsocket)
+  io.set('transports', [ 'websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
+});
+
 server.listen(port);
 
 require('./public/javascripts/Pad.js');
 
 io.sockets.on('connection', function (socket) {
-  // socket.emit('draw', { initialX: 0, initialY: 0,
-  //                       endX: 300, endY: 300 });
+
   socket.on('draw', function(data) {
     socket.broadcast.emit('draw', data);
   });

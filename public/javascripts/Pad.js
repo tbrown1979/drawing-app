@@ -4,6 +4,7 @@ function DrawingPad(canvasId) {
    this.canvas = document.getElementById(canvasId);
    this.context = this.canvas.getContext("2d");
    this.strokeStyle = 'Black';
+   this.prevPosition;
 }
 
 DrawingPad.prototype.getPosition = function (mouseEvent) {
@@ -16,7 +17,11 @@ DrawingPad.prototype.getPosition = function (mouseEvent) {
       y = mouseEvent.clientY + document.body.scrollTop + document.documentElement.scrollTop;
    }
 
-   return { X: x - this.canvas.offsetLeft, Y: y - this.canvas.offsetTop };
+   return this.positionData(x - this.canvas.offsetLeft, y - this.canvas.offsetTop);
+}
+
+DrawingPad.prototype.positionData = function (x, y) {
+   return { X: x, Y: y };
 }
 
 DrawingPad.prototype.initialize = function () {
@@ -93,27 +98,21 @@ DrawingPad.prototype.initialize = function () {
       $("#canvasSignature").mousedown(function (mouseEvent) {
          var position = drawingPad.getPosition(mouseEvent);
 
-         drawingPad.context.moveTo(position.X, position.Y);
-         var prevPosition = { x: position.X, y: position.Y };
+         drawingPad.prevPosition = position;
          drawingPad.context.beginPath();
+         drawingPad.context.moveTo(position.X, position.Y);
+         drawingPad.drawOnePixel(mouseEvent);//draw initial pixel
 
-         drawingPad.drawOnePixel(mouseEvent, sigCanvas, context);
-         
+         event.preventDefault();
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
-            drawingPad.context.moveTo(prevPosition.x, prevPosition.y);
-            drawingPad.drawLine(mouseEvent, prevPosition);
-            event.preventDefault();
-            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.drawLine(mouseEvent);
          }).mouseup(function (mouseEvent) {
-            drawingPad.finishDrawing(mouseEvent, prevPosition);
-            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.finishDrawing(mouseEvent);
          }).mouseout(function (mouseEvent) {
-            drawingPad.drawUponExitingCanvas(mouseEvent, prevPosition);
-            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.drawLine(mouseEvent);
          }).mouseover(function (mouseEvent) {
-            drawingPad.drawUponReenter(mouseEvent, prevPosition);
-            prevPosition = drawingPad.updatePrevPosition(mouseEvent, sigCanvas);
+            drawingPad.drawUponReenter(mouseEvent);
          })
          //mouse press is released outside of canvas
          $(document).mouseup(function(mouseEvent) {
@@ -123,15 +122,32 @@ DrawingPad.prototype.initialize = function () {
    }
 }
 
-DrawingPad.prototype.updatePrevPosition = function (mouseEvent) {
+DrawingPad.prototype.drawLine = function (mouseEvent) {
+   this.context.moveTo(this.prevPosition.X, this.prevPosition.Y);
    var position = this.getPosition(mouseEvent);
-
-   return { x: position.X, y: position.Y };
+   socket.emit('draw', {initialX: this.prevPosition.X,
+                        initialY: this.prevPosition.Y,
+                        endX: position.X,
+                        endY: position.Y});
+   this.prevPosition = position;
+   this.context.lineTo(position.X, position.Y);
+   this.context.stroke();
 }
 
-DrawingPad.prototype.finish = function (mouseEvent) {
-   this.context.closePath();
+DrawingPad.prototype.drawUponReenter = function (mouseEvent) {
+   this.prevPosition = this.getPosition(mouseEvent);
+   this.drawLine(mouseEvent);
+}
 
+DrawingPad.prototype.drawOnePixel = function (mouseEvent) {
+   console.log("one pixel");
+   var position = this.getPosition(mouseEvent);
+
+   this.context.lineTo(position.X-1, position.Y);
+   this.context.stroke();
+}
+
+DrawingPad.prototype.finish = function(mouseEvent) {
    $(this.canvas).unbind("mousemove")
       .unbind("mouseup")
       .unbind("mouseout")
@@ -139,36 +155,8 @@ DrawingPad.prototype.finish = function (mouseEvent) {
    $(document).unbind("mouseup");
 }
 
-DrawingPad.prototype.drawUponReenter = function (mouseEvent, prevPosition) {
-   var position = this.getPosition(mouseEvent);
+DrawingPad.prototype.finishDrawing = function (mouseEvent) {
+   this.drawLine(mouseEvent);
 
-   this.context.moveTo(position.X, position.Y);
-   this.drawLine(mouseEvent, prevPosition);
-}
-
-DrawingPad.prototype.drawUponExitingCanvas = function (mouseEvent, prevPosition) {
-   this.drawLine(mouseEvent, prevPosition);
-}
-
-DrawingPad.prototype.drawLine = function (mouseEvent, prevPosition) {
-   var position = this.getPosition(mouseEvent);
-   socket.emit('draw', {initialX: prevPosition.x,
-                        initialY: prevPosition.y,
-                        endX: position.X,
-                        endY: position.Y});
-   this.context.lineTo(position.X, position.Y);
-   this.context.stroke();
-}
-
-DrawingPad.prototype.drawOnePixel = function (mouseEvent, prevPosition) {
-   var position = this.getPosition(mouseEvent);
-
-   this.context.lineTo(position.X-1, position.Y);
-   this.context.stroke();
-}
-
-DrawingPad.prototype.finishDrawing = function (mouseEvent, prevPosition) {
-   this.drawLine(mouseEvent, prevPosition);
-
-   this.finish(mouseEvent);
+   this.context.closePath();
 }
