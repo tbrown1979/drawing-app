@@ -3,7 +3,8 @@
 function DrawingPad(canvasId) {
    this.canvas = document.getElementById(canvasId);
    this.context = this.canvas.getContext("2d");
-   this.context.strokeStyle = 'Black';
+   this.strokeStyle = 'Black'
+   this.context.strokeStyle = this.strokeStyle;
    this.prevPosition;
 }
 
@@ -122,13 +123,23 @@ DrawingPad.prototype.initialize = function () {
    }
 }
 
+DrawingPad.prototype.drawData = function (begin, end, color) {
+   return {
+      begin: {X: begin.X, Y: begin.Y},
+      end: {X: end.X, Y: end.Y},
+      color: color
+   };
+}
+
 DrawingPad.prototype.drawLine = function (mouseEvent) {
    this.context.moveTo(this.prevPosition.X, this.prevPosition.Y);
    var position = this.getPosition(mouseEvent);
-   socket.emit('draw', {initialX: this.prevPosition.X,
-                        initialY: this.prevPosition.Y,
-                        endX: position.X,
-                        endY: position.Y});
+   socket.emit('draw', 
+      this.drawData(
+         this.positionData(this.prevPosition.X, this.prevPosition.Y),
+         this.positionData(position.X, position.Y),
+         this.strokeStyle)
+   );
    this.prevPosition = position;
    this.context.lineTo(position.X, position.Y);
    this.context.stroke();
