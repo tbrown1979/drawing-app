@@ -3,7 +3,7 @@
 function DrawingPad(canvasId) {
    this.canvas = document.getElementById(canvasId);
    this.context = this.canvas.getContext("2d");
-   this.strokeStyle = 'Black';
+   this.context.strokeStyle = 'Black';
    this.prevPosition;
 }
 
