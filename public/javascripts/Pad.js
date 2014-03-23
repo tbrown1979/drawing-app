@@ -134,13 +134,18 @@ DrawingPad.prototype.drawLine = function (mouseEvent) {
    this.context.stroke();
 }
 
+DrawingPad.prototype.drawLineFrom = function (begin, end) {
+   this.context.moveTo(begin.X, begin.Y);
+   this.context.lineTo(end.X, end.Y);
+   this.context.stroke();
+}
+
 DrawingPad.prototype.drawUponReenter = function (mouseEvent) {
    this.prevPosition = this.getPosition(mouseEvent);
    this.drawLine(mouseEvent);
 }
 
 DrawingPad.prototype.drawOnePixel = function (mouseEvent) {
-   console.log("one pixel");
    var position = this.getPosition(mouseEvent);
 
    this.context.lineTo(position.X-1, position.Y);

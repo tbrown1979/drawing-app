@@ -1,19 +1,11 @@
-var socket = io.connect();
-socket.on('news', function (data) {
-  console.log(data);
-  socket.emit('my other event', { my: 'data' });
-});
+var drawingPad = new DrawingPad("canvasSignature");
+drawingPad.initialize();
 
+var socket = io.connect();
 
 socket.on('draw', function (data) {
-    sigCanvas = document.getElementById("canvasSignature");
-    context = sigCanvas.getContext("2d");
-    context.beginPath();
-    context.moveTo(data.initialX, data.initialY);
-    context.lineTo(data.endX, data.endY);
-    context.strokeStyle = 'Black';
-    context.lineWidth="2";
-    context.stroke();
-    context.closePath();
-
+    drawingPad.drawLineFrom(
+        drawingPad.positionData(data.initialX, data.initialY),
+        drawingPad.positionData(data.endX, data.endY)
+    );
 });
