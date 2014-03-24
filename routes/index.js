@@ -18,6 +18,6 @@ module.exports = function(io) {
       });
     });
     res.render('index', {title: 'Express'});
-    }
+  }
   return routes;
 };

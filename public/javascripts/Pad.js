@@ -175,6 +175,7 @@ DrawingPad.prototype.finishDrawing = function (mouseEvent) {
    this.drawLine(mouseEvent);
 
    this.context.closePath();
+   this.finish(mouseEvent);
 }
 
 DrawingPad.prototype.setCanvasDimensionsToClient = function () {
