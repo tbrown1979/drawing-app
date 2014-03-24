@@ -176,3 +176,8 @@ DrawingPad.prototype.finishDrawing = function (mouseEvent) {
 
    this.context.closePath();
 }
+
+DrawingPad.prototype.setCanvasDimensionsToClient = function () {
+   this.canvas.width = document.body.clientWidth;
+   this.canvas.height = document.body.clientHeight;
+}
