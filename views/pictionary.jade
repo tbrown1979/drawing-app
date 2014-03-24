@@ -1,0 +1,18 @@
+doctype
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Desktops and Tablets
+
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+      
+  body
+    h1 Canvas test
+    #canvasDiv
+      //
+         It's bad practice (to me) to put your CSS here.  I'd recommend the use of a CSS file! 
+      canvas#canvasSignature(width='500px', height='500px')
+    script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+    script(type='text/javascript' src='/javascripts/Pad.js')
+    script(src='/socket.io/socket.io.js')

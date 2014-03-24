@@ -19,5 +19,9 @@ module.exports = function(io) {
     });
     res.render('index', {title: 'Express'});
   }
+
+  routes.pictionary = function (req, res) {
+    res.render('pictionary', {title: 'Pictionary'})
+  }
   return routes;
 };
