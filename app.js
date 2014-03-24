@@ -49,15 +49,3 @@ io.configure('production', function(){
 
 server.listen(port);
 
-require('./public/javascripts/Pad.js');
-
-io.sockets.on('connection', function (socket) {
-
-  socket.on('draw', function(data) {
-    socket.broadcast.emit('draw', data);
-  });
-
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-});
