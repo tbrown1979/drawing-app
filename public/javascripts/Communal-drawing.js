@@ -10,4 +10,8 @@ socket.on('draw', function (data) {
 
 $(window).resize( function () {
     drawingPad.setCanvasDimensionsToClient();
-})
+});
+
+$('button[type=button]').click(function(){
+    drawingPad.changeStrokeColor(this.value);
+});

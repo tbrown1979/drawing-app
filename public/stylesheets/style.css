@@ -2,7 +2,7 @@ html, body {
     padding: 0px;
     margin: 0px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-    background-color: #23A4BA;
+    /*background-color: #23A4BA;*/
     position: absolute;
     width: 100%;
     height: 100%;
@@ -13,24 +13,21 @@ html, body {
     overflow: hidden;
 
 }
-/*
-.wrapper {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+
+button {
+    width: 70px;
+    height: 21px;
+}
+
+.colors {
+    position: fixed;
     top: 0;
     right: 0;
-    bottom: 0;
-    left: 0;
-}*/
+    opacity:0.4;
+}
 
 a {
   color: #00B7FF;
-}
-
-.canvasDiv {
-
-
 }
 
 #canvasSignature {

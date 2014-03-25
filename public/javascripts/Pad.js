@@ -8,6 +8,11 @@ function DrawingPad(canvasId) {
    this.prevPosition;
 }
 
+DrawingPad.prototype.changeStrokeColor = function (color) {
+   this.strokeStyle = color;
+   this.context.strokeStyle = this.strokeStyle;
+}
+
 DrawingPad.prototype.getPosition = function (mouseEvent) {
    var x, y;
    if (mouseEvent.pageX != undefined && mouseEvent.pageY != undefined) {
