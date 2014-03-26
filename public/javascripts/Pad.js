@@ -91,9 +91,9 @@ DrawingPad.prototype.initialize = function () {
       }
 
       // attach the touchstart, touchmove, touchend event listeners.
-      sigCanvas.addEventListener('touchstart', draw, false);
-      sigCanvas.addEventListener('touchmove', draw, false);
-      sigCanvas.addEventListener('touchend', draw, false);
+      this.canvas.addEventListener('touchstart', draw, false);
+      this.canvas.addEventListener('touchmove', draw, false);
+      this.canvas.addEventListener('touchend', draw, false);
 
       // prevent elastic scrolling
       sigCanvas.addEventListener('touchmove', function (event) {
