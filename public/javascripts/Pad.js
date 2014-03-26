@@ -152,9 +152,11 @@ DrawingPad.prototype.eventDraw = function (mouseEvent) {
 }
 
 DrawingPad.prototype.drawLineFrom = function (begin, end) {
+   this.context.beginPath();
    this.context.moveTo(begin.X, begin.Y);
    this.context.lineTo(end.X, end.Y);
    this.context.stroke();
+   this.context.closePath();
 }
 
 DrawingPad.prototype.drawUponReenter = function (mouseEvent) {
