@@ -40,7 +40,7 @@ DrawingPad.prototype.initialize = function () {
    var sigCanvas = this.canvas
    var context = this.context
    var pad = this;
-
+   pad.prevPosition = position;
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
@@ -49,14 +49,12 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
-            context.beginPath();
-            context.moveTo(coors.x, coors.y);
+            pad.draw(coors);
             this.isDrawing = true;
          },
          touchmove: function (coors) {
             if (this.isDrawing) {
-               context.lineTo(coors.x, coors.y);
-               context.stroke();
+               pad.draw(coors);
             }
          },
          touchend: function (coors) {
@@ -74,7 +72,7 @@ DrawingPad.prototype.initialize = function () {
             x: event.targetTouches[0].pageX,
             y: event.targetTouches[0].pageY
          };
-         console.log("X : " + coors.x);
+         // console.log("X : " + coors.x);
 
          // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
