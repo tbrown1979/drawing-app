@@ -47,7 +47,6 @@ DrawingPad.prototype.initialize = function () {
    if (is_touch_device) {
       // create a drawer which tracks touch movements
       var drawer = {
-         console.log("X : " + coors.x)
          isDrawing: false,
          touchstart: function (coors) {
             context.beginPath();
@@ -75,6 +74,8 @@ DrawingPad.prototype.initialize = function () {
             x: event.targetTouches[0].pageX,
             y: event.targetTouches[0].pageY
          };
+         console.log("X : " + coors.x);
+
          // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
 
