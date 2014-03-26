@@ -68,7 +68,7 @@ DrawingPad.prototype.initialize = function () {
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
          // get the touch coordinates.  Using the first touch in case of multi-touch
-         var coors = positionData(
+         var coors = this.positionData(
             event.targetTouches[0].pageX,
             event.targetTouches[0].pageY
          );
