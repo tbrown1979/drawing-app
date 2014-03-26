@@ -66,24 +66,24 @@ DrawingPad.prototype.initialize = function () {
       };
 
       // create a function to pass touch events and coordinates to drawer
-      function draw(event) {
-         // get the touch coordinates.  Using the first touch in case of multi-touch
-         var eventX = event.targetTouches[0].clientX;
-         var eventY = event.targetTouches[0].clientY;
-         var coors = pad.positionData( eventX, eventY );
-         // Now we need to get the offset of the canvas location
-         var obj = pad.canvas;
+      // function draw(event) {
+      //    // get the touch coordinates.  Using the first touch in case of multi-touch
+      //    var eventX = event.targetTouches[0].pageX;
+      //    var eventY = event.targetTouches[0].pageY;
+      //    var coors = pad.positionData( eventX, eventY );
+      //    // Now we need to get the offset of the canvas location
+      //    var obj = pad.canvas;
 
-         if (obj.offsetParent) {
-            // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
-            do {
-               coors.X -= obj.offsetLeft;
-               coors.Y -= obj.offsetTop;
-            }
-           // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
-           // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
-            while ((obj = obj.offsetParent) != null);
-         }
+      //    if (obj.offsetParent) {
+      //       // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
+      //       do {
+      //          coors.X -= obj.offsetLeft;
+      //          coors.Y -= obj.offsetTop;
+      //       }
+      //      // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
+      //      // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
+      //       while ((obj = obj.offsetParent) != null);
+      //    }
 
          // pass the coordinates to the appropriate handler
          drawer[event.type](coors);
