@@ -43,7 +43,7 @@ DrawingPad.prototype.initialize = function () {
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
-   if (is_touch_device) {
+   if (true) {//(is_touch_device) {
       // create a drawer which tracks touch movements
       var drawer = {
          isDrawing: false,
@@ -68,11 +68,10 @@ DrawingPad.prototype.initialize = function () {
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
          // get the touch coordinates.  Using the first touch in case of multi-touch
-         var coors = {
-            x: event.targetTouches[0].pageX,
-            y: event.targetTouches[0].pageY
-         };
-         // console.log("X : " + coors.x);
+         var coors = pad.positionData(
+            event.targetTouches[0].pageX,
+            event.targetTouches[0].pageY
+         );
 
          // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
@@ -80,8 +79,8 @@ DrawingPad.prototype.initialize = function () {
          if (obj.offsetParent) {
             // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
             do {
-               coors.x -= obj.offsetLeft;
-               coors.y -= obj.offsetTop;
+               coors.X -= obj.offsetLeft;
+               coors.Y -= obj.offsetTop;
             }
            // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
            // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
@@ -95,7 +94,7 @@ DrawingPad.prototype.initialize = function () {
       // attach the touchstart, touchmove, touchend event listeners.
       sigCanvas.addEventListener('touchstart', draw, false);
       sigCanvas.addEventListener('touchmove', draw, false);
-      sigCanvas.addEventListener('touchend', draw, false);
+      // sigCanvas.addEventListener('touchend', draw, false);
 
       // prevent elastic scrolling
       sigCanvas.addEventListener('touchmove', function (event) {
@@ -103,6 +102,7 @@ DrawingPad.prototype.initialize = function () {
       }, false); 
    }
    else {
+      console.log("Not touch");
       // start drawing when the mousedown event fires, and attach handlers to
       // draw a line to wherever the mouse moves to
       var drawingPad = this;
@@ -142,7 +142,7 @@ DrawingPad.prototype.drawData = function (begin, end, color) {
 }
 
 DrawingPad.prototype.draw = function (curPosition) {
-
+   this.context.beginPath();
    this.context.moveTo(this.prevPosition.X, this.prevPosition.Y);
    socket.emit('draw', 
       this.drawData(
@@ -155,6 +155,7 @@ DrawingPad.prototype.draw = function (curPosition) {
    this.prevPosition = curPosition;
    this.context.lineTo(curPosition.X, curPosition.Y);
    this.context.stroke();
+   this.context.closePath();
 }
 
 DrawingPad.prototype.eventDraw = function (mouseEvent) {
