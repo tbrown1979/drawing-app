@@ -48,7 +48,7 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
-            pad.prevPosition = this.positionData(coors.X, coors.Y);
+            pad.prevPosition = pad.positionData(coors.X, coors.Y);
             pad.draw(coors);
             this.isDrawing = true;
          },
