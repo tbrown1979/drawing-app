@@ -40,7 +40,7 @@ DrawingPad.prototype.initialize = function () {
    // var sigCanvas = document.getElementById("canvasSignature");
    // var context = sigCanvas.getContext("2d");
    // context.strokeStyle = 'Black';
-
+   pad = this;
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
@@ -49,12 +49,12 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
-            this.draw(coors);
+            pad.draw(coors);
             this.isDrawing = true;
          },
          touchmove: function (coors) {
             if (this.isDrawing) {
-               this.draw(coors);
+               pad.draw(coors);
             }
          },
          touchend: function (coors) {
@@ -65,7 +65,6 @@ DrawingPad.prototype.initialize = function () {
          }
       };
 
-      pad = this;
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
          // get the touch coordinates.  Using the first touch in case of multi-touch
