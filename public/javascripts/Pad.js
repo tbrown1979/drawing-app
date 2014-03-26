@@ -43,7 +43,7 @@ DrawingPad.prototype.initialize = function () {
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
-   if (true) {//(is_touch_device) {
+   if (is_touch_device) {
       // create a drawer which tracks touch movements
       var drawer = {
          isDrawing: false,
