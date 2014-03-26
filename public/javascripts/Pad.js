@@ -86,8 +86,8 @@ DrawingPad.prototype.initialize = function () {
       //    }
 
          // pass the coordinates to the appropriate handler
-         drawer[event.type](coors);
-      }
+      //    drawer[event.type](coors);
+      // }
 
       // attach the touchstart, touchmove, touchend event listeners.
       this.canvas.addEventListener('touchstart', draw, false);
