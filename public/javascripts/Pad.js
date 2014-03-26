@@ -36,7 +36,6 @@ DrawingPad.prototype.positionData = function (x, y) {
 }
 
 DrawingPad.prototype.initialize = function () {
-   // get references to the canvas element as well as the 2D drawing context
    var sigCanvas = this.canvas
    var context = this.context
    var pad = this;
@@ -65,19 +64,15 @@ DrawingPad.prototype.initialize = function () {
          }
       };
 
-      // create a function to pass touch events and coordinates to drawer
       function draw(event) {
-         // get the touch coordinates.  Using the first touch in case of multi-touch
          var coors = pad.positionData(
             event.targetTouches[0].pageX,
             event.targetTouches[0].pageY
          );
 
-         // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
 
          if (obj.offsetParent) {
-            // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
             do {
                coors.X -= obj.offsetLeft;
                coors.Y -= obj.offsetTop;
@@ -87,24 +82,18 @@ DrawingPad.prototype.initialize = function () {
             while ((obj = obj.offsetParent) != null);
          }
 
-         // pass the coordinates to the appropriate handler
          drawer[event.type](coors);
       }
 
-      // attach the touchstart, touchmove, touchend event listeners.
       sigCanvas.addEventListener('touchstart', draw, false);
       sigCanvas.addEventListener('touchmove', draw, false);
       // sigCanvas.addEventListener('touchend', draw, false);
 
-      // prevent elastic scrolling
       sigCanvas.addEventListener('touchmove', function (event) {
          event.preventDefault();
       }, false); 
    }
    else {
-      console.log("Not touch");
-      // start drawing when the mousedown event fires, and attach handlers to
-      // draw a line to wherever the mouse moves to
       var drawingPad = this;
       $("#canvasSignature").mousedown(function (mouseEvent) {
          var position = drawingPad.getPosition(mouseEvent);
@@ -115,7 +104,7 @@ DrawingPad.prototype.initialize = function () {
          drawingPad.drawOnePixel(mouseEvent);//draw initial pixel
 
          event.preventDefault();
-         // attach event handlers
+
          $(this).mousemove(function (mouseEvent) {
             drawingPad.eventDraw(mouseEvent);
          }).mouseup(function (mouseEvent) {
