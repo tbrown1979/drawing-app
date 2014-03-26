@@ -40,7 +40,6 @@ DrawingPad.prototype.initialize = function () {
    var sigCanvas = this.canvas
    var context = this.context
    var pad = this;
-   pad.prevPosition = position;
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
@@ -49,6 +48,7 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
+            pad.prevPosition = this.positionData(coors.X, coors.Y);
             pad.draw(coors);
             this.isDrawing = true;
          },
