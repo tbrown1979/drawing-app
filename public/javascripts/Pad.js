@@ -68,8 +68,8 @@ DrawingPad.prototype.initialize = function () {
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
          // get the touch coordinates.  Using the first touch in case of multi-touch
-         var eventX = event.targetTouches[0].pageX;
-         var eventY = event.targetTouches[0].pageY;
+         var eventX = event.targetTouches[0].clientX;
+         var eventY = event.targetTouches[0].clientY;
          var coors = pad.positionData( eventX, eventY );
          // Now we need to get the offset of the canvas location
          var obj = pad.canvas;
