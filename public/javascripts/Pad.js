@@ -49,14 +49,12 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
-            context.beginPath();
-            context.moveTo(coors.x, coors.y);
+            this.draw(coors);
             this.isDrawing = true;
          },
          touchmove: function (coors) {
             if (this.isDrawing) {
-               context.lineTo(coors.x, coors.y);
-               context.stroke();
+               this.draw(coors);
             }
          },
          touchend: function (coors) {
@@ -70,18 +68,18 @@ DrawingPad.prototype.initialize = function () {
       // create a function to pass touch events and coordinates to drawer
       function draw(event) {
          // get the touch coordinates.  Using the first touch in case of multi-touch
-         var coors = {
-            x: event.targetTouches[0].pageX,
-            y: event.targetTouches[0].pageY
-         };
+         var coors = positionData(
+            event.targetTouches[0].pageX,
+            event.targetTouches[0].pageY
+         );
          // Now we need to get the offset of the canvas location
          var obj = sigCanvas;
 
          if (obj.offsetParent) {
             // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
             do {
-               coors.x -= obj.offsetLeft;
-               coors.y -= obj.offsetTop;
+               coors.X -= obj.offsetLeft;
+               coors.Y -= obj.offsetTop;
             }
            // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
            // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
@@ -117,11 +115,11 @@ DrawingPad.prototype.initialize = function () {
          event.preventDefault();
          // attach event handlers
          $(this).mousemove(function (mouseEvent) {
-            drawingPad.drawLine(mouseEvent);
+            drawingPad.eventDraw(mouseEvent);
          }).mouseup(function (mouseEvent) {
             drawingPad.finishDrawing(mouseEvent);
          }).mouseout(function (mouseEvent) {
-            drawingPad.drawLine(mouseEvent);
+            drawingPad.eventDraw(mouseEvent);
          }).mouseover(function (mouseEvent) {
             drawingPad.drawUponReenter(mouseEvent);
          })
@@ -141,20 +139,23 @@ DrawingPad.prototype.drawData = function (begin, end, color) {
    };
 }
 
-DrawingPad.prototype.drawLine = function (mouseEvent) {
+DrawingPad.prototype.draw = function (curPosition) {
    this.context.moveTo(this.prevPosition.X, this.prevPosition.Y);
-   var position = this.getPosition(mouseEvent);
    socket.emit('draw', 
       this.drawData(
          this.positionData(this.prevPosition.X, this.prevPosition.Y),
-         this.positionData(position.X, position.Y),
+         this.positionData(curPosition.X, curPosition.Y),
          this.strokeStyle)
    );
    this.context.lineWidth = this.strokeWidth;
    this.context.lineCap = 'round';
-   this.prevPosition = position;
-   this.context.lineTo(position.X, position.Y);
+   this.prevPosition = curPosition;
+   this.context.lineTo(curPosition.X, curPosition.Y);
    this.context.stroke();
+}
+
+DrawingPad.prototype.eventDraw = function (mouseEvent) {
+   this.draw(this.getPosition(mouseEvent));
 }
 
 DrawingPad.prototype.drawLineFrom = function (begin, end) {
@@ -165,12 +166,12 @@ DrawingPad.prototype.drawLineFrom = function (begin, end) {
 
 DrawingPad.prototype.drawUponReenter = function (mouseEvent) {
    this.prevPosition = this.getPosition(mouseEvent);
-   this.drawLine(mouseEvent);
+   this.eventDraw(mouseEvent);
 }
 
 DrawingPad.prototype.drawOnePixel = function (mouseEvent) {
    this.prevPosition = this.positionData(this.prevPosition.X-1, this.prevPosition.Y);
-   this.drawLine(mouseEvent);
+   this.eventDraw(mouseEvent);
 }
 
 DrawingPad.prototype.finish = function(mouseEvent) {
@@ -182,7 +183,7 @@ DrawingPad.prototype.finish = function(mouseEvent) {
 }
 
 DrawingPad.prototype.finishDrawing = function (mouseEvent) {
-   this.drawLine(mouseEvent);
+   this.eventDraw(mouseEvent);
 
    this.context.closePath();
    this.finish(mouseEvent);
