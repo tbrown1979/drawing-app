@@ -15,3 +15,7 @@ $(window).resize( function () {
 $('button[type=button]').click(function(){
     drawingPad.changeStrokeColor(this.value);
 });
+
+$('input[type=range]').change(function(){
+    drawingPad.changeStrokeWidth(this.value);
+});

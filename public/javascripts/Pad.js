@@ -5,12 +5,17 @@ function DrawingPad(canvasId) {
    this.context = this.canvas.getContext("2d");
    this.strokeStyle = 'Black'
    this.context.strokeStyle = this.strokeStyle;
+   this.strokeWidth = 3;
    this.prevPosition;
 }
 
 DrawingPad.prototype.changeStrokeColor = function (color) {
    this.strokeStyle = color;
    this.context.strokeStyle = this.strokeStyle;
+}
+
+DrawingPad.prototype.changeStrokeWidth = function (width) {
+   this.strokeWidth = width;
 }
 
 DrawingPad.prototype.getPosition = function (mouseEvent) {
@@ -32,9 +37,9 @@ DrawingPad.prototype.positionData = function (x, y) {
 
 DrawingPad.prototype.initialize = function () {
    // get references to the canvas element as well as the 2D drawing context
-   var sigCanvas = document.getElementById("canvasSignature");
-   var context = sigCanvas.getContext("2d");
-   context.strokeStyle = 'Black';
+   // var sigCanvas = document.getElementById("canvasSignature");
+   // var context = sigCanvas.getContext("2d");
+   // context.strokeStyle = 'Black';
 
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
@@ -145,6 +150,8 @@ DrawingPad.prototype.drawLine = function (mouseEvent) {
          this.positionData(position.X, position.Y),
          this.strokeStyle)
    );
+   this.context.lineWidth = this.strokeWidth;
+   this.context.lineCap = 'round';
    this.prevPosition = position;
    this.context.lineTo(position.X, position.Y);
    this.context.stroke();
@@ -162,10 +169,8 @@ DrawingPad.prototype.drawUponReenter = function (mouseEvent) {
 }
 
 DrawingPad.prototype.drawOnePixel = function (mouseEvent) {
-   var position = this.getPosition(mouseEvent);
-
-   this.context.lineTo(position.X-1, position.Y);
-   this.context.stroke();
+   this.prevPosition = this.positionData(this.prevPosition.X-1, this.prevPosition.Y);
+   this.drawLine(mouseEvent);
 }
 
 DrawingPad.prototype.finish = function(mouseEvent) {

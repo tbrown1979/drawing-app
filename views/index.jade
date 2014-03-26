@@ -8,6 +8,11 @@ head
 
       
   body
+    div.lineWidth
+      label(for="width")
+        |Size of Brush
+      br
+      input(type="range" value="3" min="1" max="25" name="width")
     div.colors
       button(type="button", value="yellow")
         |YELLOW
@@ -17,6 +22,12 @@ head
       br
       button(type="button", value="black")
         |BLACK 
+      br
+      button(type="button", value="purple")
+        |PURPLE
+      br
+      button(type="button", value="white")
+        |ERASE
     canvas#canvasSignature
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
     script(type='text/javascript', src='/javascripts/Pad.js')
