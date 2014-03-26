@@ -47,6 +47,7 @@ DrawingPad.prototype.initialize = function () {
    if (is_touch_device) {
       // create a drawer which tracks touch movements
       var drawer = {
+         console.log("X : " + coors.x)
          isDrawing: false,
          touchstart: function (coors) {
             context.beginPath();
