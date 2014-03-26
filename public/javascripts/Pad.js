@@ -73,7 +73,7 @@ DrawingPad.prototype.initialize = function () {
             event.targetTouches[0].pageY
          );
          // Now we need to get the offset of the canvas location
-         var obj = sigCanvas;
+         var obj = this.canvas;
 
          if (obj.offsetParent) {
             // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
