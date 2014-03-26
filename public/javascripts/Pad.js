@@ -37,10 +37,10 @@ DrawingPad.prototype.positionData = function (x, y) {
 
 DrawingPad.prototype.initialize = function () {
    // get references to the canvas element as well as the 2D drawing context
-   // var sigCanvas = document.getElementById("canvasSignature");
-   // var context = sigCanvas.getContext("2d");
-   // context.strokeStyle = 'Black';
-   pad = this;
+   var sigCanvas = this.canvas
+   var context = this.context
+   var pad = this;
+
    // This will be defined on a TOUCH device such as iPad or Android, etc.
    var is_touch_device = 'ontouchstart' in document.documentElement;
 
@@ -49,12 +49,14 @@ DrawingPad.prototype.initialize = function () {
       var drawer = {
          isDrawing: false,
          touchstart: function (coors) {
-            pad.draw(coors);
+            context.beginPath();
+            context.moveTo(coors.x, coors.y);
             this.isDrawing = true;
          },
          touchmove: function (coors) {
             if (this.isDrawing) {
-               pad.draw(coors);
+               context.lineTo(coors.x, coors.y);
+               context.stroke();
             }
          },
          touchend: function (coors) {
@@ -66,36 +68,37 @@ DrawingPad.prototype.initialize = function () {
       };
 
       // create a function to pass touch events and coordinates to drawer
-      // function draw(event) {
-      //    // get the touch coordinates.  Using the first touch in case of multi-touch
-      //    var eventX = event.targetTouches[0].pageX;
-      //    var eventY = event.targetTouches[0].pageY;
-      //    var coors = pad.positionData( eventX, eventY );
-      //    // Now we need to get the offset of the canvas location
-      //    var obj = pad.canvas;
+      function draw(event) {
+         // get the touch coordinates.  Using the first touch in case of multi-touch
+         var coors = {
+            x: event.targetTouches[0].pageX,
+            y: event.targetTouches[0].pageY
+         };
+         // Now we need to get the offset of the canvas location
+         var obj = sigCanvas;
 
-      //    if (obj.offsetParent) {
-      //       // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
-      //       do {
-      //          coors.X -= obj.offsetLeft;
-      //          coors.Y -= obj.offsetTop;
-      //       }
-      //      // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
-      //      // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
-      //       while ((obj = obj.offsetParent) != null);
-      //    }
+         if (obj.offsetParent) {
+            // Every time we find a new object, we add its offsetLeft and offsetTop to curleft and curtop.
+            do {
+               coors.x -= obj.offsetLeft;
+               coors.y -= obj.offsetTop;
+            }
+           // The while loop can be "while (obj = obj.offsetParent)" only, which does return null
+           // when null is passed back, but that creates a warning in some editors (i.e. VS2010).
+            while ((obj = obj.offsetParent) != null);
+         }
 
          // pass the coordinates to the appropriate handler
-      //    drawer[event.type](coors);
-      // }
+         drawer[event.type](coors);
+      }
 
       // attach the touchstart, touchmove, touchend event listeners.
-      this.canvas.addEventListener('touchstart', draw, false);
-      this.canvas.addEventListener('touchmove', draw, false);
-      this.canvas.addEventListener('touchend', draw, false);
+      sigCanvas.addEventListener('touchstart', draw, false);
+      sigCanvas.addEventListener('touchmove', draw, false);
+      sigCanvas.addEventListener('touchend', draw, false);
 
       // prevent elastic scrolling
-      this.canvas.addEventListener('touchmove', function (event) {
+      sigCanvas.addEventListener('touchmove', function (event) {
          event.preventDefault();
       }, false); 
    }
