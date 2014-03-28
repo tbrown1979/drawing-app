@@ -1,6 +1,7 @@
 // works out the X, Y position of the click inside the canvas from the X, Y position on the page
 
 function DrawingPad(canvasId) {
+   this.socket;
    this.canvas = document.getElementById(canvasId);
    this.context = this.canvas.getContext("2d");
    this.strokeStyle = 'Black'
@@ -35,7 +36,8 @@ DrawingPad.prototype.positionData = function (x, y) {
    return { X: x, Y: y };
 }
 
-DrawingPad.prototype.initialize = function () {
+DrawingPad.prototype.initialize = function (socket) {
+   this.socket = socket;
    var sigCanvas = this.canvas
    var context = this.context
    var pad = this;
@@ -133,7 +135,7 @@ DrawingPad.prototype.drawData = function (begin, end, color) {
 DrawingPad.prototype.draw = function (curPosition) {
    this.context.beginPath();
    this.context.moveTo(this.prevPosition.X, this.prevPosition.Y);
-   socket.emit('draw', 
+   this.socket.emit('draw', 
       this.drawData(
          this.positionData(this.prevPosition.X, this.prevPosition.Y),
          this.positionData(curPosition.X, curPosition.Y),

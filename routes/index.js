@@ -21,6 +21,14 @@ module.exports = function(io) {
   }
 
   routes.pictionary = function (req, res) {
+    require('../public/javascripts/Pad.js');
+
+    io.sockets.on('connection', function (socket) {
+      socket.on('draw', function(data) {
+        socket.broadcast.emit('draw', data);
+      })
+    });
+
     res.render('pictionary', {title: 'Pictionary'})
   }
   return routes;

@@ -1,0 +1,9 @@
+html, body {
+  background-color: #28677A
+}
+
+#canvasSignature {
+    background-color: #FFFFFF;
+    margin: 0 auto;
+    display:block;
+}
