@@ -8,8 +8,17 @@ head
       
   body(ng-controller="DrawingAppCtrl")
     h1 Canvas test
-    #canvasDiv
+    div.canvasDiv
       canvas#canvasSignature
+    div.chat
+      div.messageEntry
+        form.formMessage(ng-model="formMessage", name="formMessage")
+          label
+            | Enter a message:
+          input(ng-model="message", class="message", ng-required="true", type="text", ng-minlength="1")
+          input(type="button", value="Send", ng-disabled="formMessage.$invalid")
+
+
     script(type='text/javascript' src='/javascripts/Pad.js')    
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js')
