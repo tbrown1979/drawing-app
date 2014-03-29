@@ -9,7 +9,7 @@ head
   body(ng-controller="DrawingAppCtrl")
     h1 Canvas test
     div.canvasDiv
-      canvas#canvasSignature
+      canvas#canvasSignature(width="600", height="400")
     div.chat
       div.messageEntry
         form.formMessage(ng-model="formMessage", name="formMessage")

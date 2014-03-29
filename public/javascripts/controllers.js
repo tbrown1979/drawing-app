@@ -5,7 +5,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   drawingPad.initialize(socket);
 
   socket.on('draw', function (data) {
-    $scope.drawingPad.drawLineFrom( data.begin, data.end );
+    drawingPad.drawLineFrom( data.begin, data.end );
   });
 
 }
