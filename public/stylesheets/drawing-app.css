@@ -6,10 +6,14 @@ html, body {
     background-color: #FFFFFF;
     margin: 0 auto;
     display:block;
-/*    width: 600px;
-    height: 400px;*/
 }
 
 .chat {
     background-color: #400B14
+}
+
+ul {
+    list-style: none;
+    padding-left: 10px;
+    margin: 0;
 }
