@@ -13,7 +13,7 @@ head
     div.chat
       div.messages
         ul
-          li(ng-repeat="message in messages track by $index")
+          li(ng-repeat="message in messages track by $index" ng-cloak="true")
             {{message}}
           //- li(class="list-unstyled")
           //-   |test message

@@ -18,7 +18,8 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
     drawingPad.drawLineFrom( data.begin, data.end );
   });
 
-  socket.on('receiveMsg', function (data) {
+  socket.on('addMsg', function (data) {
+    console.log("hit")
     $scope.messages.push(data.msg);
   });
 
