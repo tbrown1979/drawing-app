@@ -11,12 +11,6 @@ head
     div.canvasDiv
       canvas#canvasSignature(width="600", height="400")
     div.chat
-      div.messages
-        ul
-          li(ng-repeat="message in messages track by $index" ng-cloak="true")
-            {{message}}
-          //- li(class="list-unstyled")
-          //-   |test message
       div.messageEntry
         form.formMessage(ng-model="formMessage", name="formMessage", ng-submit="sendMsg(message)")
           label
@@ -24,6 +18,12 @@ head
           input(ng-model="message", class="message", ng-required="true", type="text", ng-minlength="1")
           input(type="submit", value="Send", ng-disabled="formMessage.$invalid")
 
+      div.messages
+        ul
+          li(ng-repeat="message in messages track by $index" ng-cloak="true")
+            {{message}}
+          //- li(class="list-unstyled")
+          //-   |test message
 
     script(type='text/javascript' src='/javascripts/Pad.js')    
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')

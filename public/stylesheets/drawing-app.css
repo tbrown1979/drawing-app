@@ -9,7 +9,18 @@ html, body {
 }
 
 .chat {
-    background-color: #400B14
+    background-color: #400B14;
+    height: 200px;
+    width: 600px;
+    display:block;
+    margin: 0 auto;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.messages {
+    bottom: 0;
+
 }
 
 ul {
