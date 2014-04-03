@@ -4,6 +4,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   console.log("starting");
   $scope.message;
   $scope.messages = [];
+  $scope.joined = false;
 
 
   drawingPad.initialize(socket);
@@ -12,6 +13,11 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
     console.log($scope.messages);
     $scope.messages.push(message);
     socket.emit('msg', {msg: message});
+  }
+
+  $scope.join = function (groupName) {
+    $scope.joined = true
+    $socket.emit('join', {group: "name"});
   }
 
   socket.on('draw', function (data) {

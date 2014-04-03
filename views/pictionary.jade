@@ -5,29 +5,34 @@ head
     title Desktops and Tablets
 
     link(rel='stylesheet', href='/stylesheets/drawing-app.css')
+    script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js')
+
       
   body(ng-controller="DrawingAppCtrl")
     h1 Canvas test
-    div.canvasDiv
-      canvas#canvasSignature(width="600", height="400")
-    div.chat
-      div.messageEntry
-        form.formMessage(ng-model="formMessage", name="formMessage", ng-submit="sendMsg(message)")
-          label
-            | Enter a message:
-          input(ng-model="message", class="message", ng-required="true", type="text", ng-minlength="1")
-          input(type="submit", value="Send", ng-disabled="formMessage.$invalid")
+    div.join(ng-show="!joined")
+      form.join(ng-model="formJoin", name="formJoin", ng-submit="join(name)")
+        input(ng-model="groupName", class="groupName", ng-required="true", type="text", ng-minlength="1")
+        input(type="submit", value="Join Group", ng-disabled="formJoin.$invalid")
+    div.pictionary(ng-hide="!joined" ng-cloak)
+      div.canvasDiv
+        canvas#canvasSignature(width="600", height="400")
+      div.chat
+        div.messageEntry
+          form.formMessage(ng-model="formMessage", name="formMessage", ng-submit="sendMsg(message)")
+            label
+              | Enter a message:
+            input(ng-model="message", class="message", ng-required="true", type="text", ng-minlength="1")
+            input(type="submit", value="Send", ng-disabled="formMessage.$invalid")
 
-      div.messages
-        ul
-          li(ng-repeat="message in messages track by $index" ng-cloak="true")
-            {{message}}
-          //- li(class="list-unstyled")
-          //-   |test message
+        div.messages
+          ul
+            li(ng-repeat="message in messages track by $index" ng-cloak="true")
+              {{message}}
+
 
     script(type='text/javascript' src='/javascripts/Pad.js')    
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
-    script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js')
     script(type='text/javascript', src='/javascripts/app.js')
     script(type='text/javascript', src='/javascripts/services.js')
     script(type='text/javascript', src='/javascripts/controllers.js')
