@@ -27,7 +27,17 @@ module.exports = function(server) {
     });
 
     socket.on('msg', function(data) {
+      console.log("testing this");
       socket.broadcast.emit('addMsg', data);
+    });
+
+    socket.on('joinGroup', function(data) {
+      socket.username = "bleh";
+      socket.room = data.groupName;
+      socket.join(data.groupName);
+      var message = "testing this";
+      socket.broadcast.to(data.groupName).emit('addMsg', {msg: message});
+      console.log("broadcasting");
     });
   });
 }
