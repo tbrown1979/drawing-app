@@ -11,7 +11,7 @@ head
   body(ng-controller="DrawingAppCtrl")
     h1 Canvas test
     div.join(ng-show="!joined")
-      form.join(ng-model="formJoin", name="formJoin", ng-submit="join(name)")
+      form.join(ng-model="formJoin", name="formJoin", ng-submit="join(groupName)")
         input(ng-model="groupName", class="groupName", ng-required="true", type="text", ng-minlength="1")
         input(type="submit", value="Join Group", ng-disabled="formJoin.$invalid")
     div.pictionary(ng-hide="!joined" ng-cloak)

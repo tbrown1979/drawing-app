@@ -16,9 +16,8 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   }
 
   $scope.join = function (groupName) {
-    console.log("made it");
     $scope.joined = true;
-    socket.emit('joinGroup', {groupName: "name"});
+    socket.emit('joinGroup', {name: groupName});
   }
 
   // socket.on('joinRoom', function(newRoom) {

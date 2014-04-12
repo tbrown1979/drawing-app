@@ -33,10 +33,12 @@ module.exports = function(server) {
 
     socket.on('joinGroup', function(data) {
       socket.username = "bleh";
-      socket.room = data.groupName;
-      socket.join(data.groupName);
+      console.log(data);
+      socket.room = data.name;
+      socket.join(data.name);
+      console.log(data.name);
       var message = "testing this";
-      socket.broadcast.to(data.groupName).emit('addMsg', {msg: message});
+      socket.broadcast.in(data.name).emit('addMsg', {msg: message});
       console.log("broadcasting");
     });
   });
