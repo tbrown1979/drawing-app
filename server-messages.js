@@ -28,7 +28,7 @@ module.exports = function(server) {
 
     socket.on('msg', function(data) {
       console.log("testing this");
-      socket.broadcast.emit('addMsg', data);
+      socket.broadcast.in(socket.room).emit('addMsg', data);
     });
 
     socket.on('joinGroup', function(data) {
