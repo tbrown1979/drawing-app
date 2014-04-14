@@ -12,6 +12,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
 
   $scope.sendMsg = function (message) {
     $scope.messages.push(message);
+    $scope.message = "";
     socket.emit('msg', {msg: message});
   }
 
@@ -31,7 +32,6 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   socket.on('addMsg', function (data) {
     console.log(data);
     $scope.messages.push(data.msg);
-    // console.log($scope.messages);
   });
 
 }

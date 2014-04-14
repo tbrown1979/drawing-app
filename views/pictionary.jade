@@ -24,7 +24,6 @@ head
               | Enter a message:
             input(ng-model="message", class="message", ng-required="true", type="text", ng-minlength="1")
             input(type="submit", value="Send", ng-disabled="formMessage.$invalid")
-
         div.messages
           ul
             li(ng-repeat="message in messages track by $index" ng-cloak="true")

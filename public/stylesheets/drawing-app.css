@@ -14,13 +14,18 @@ html, body {
     width: 600px;
     display:block;
     margin: 0 auto;
-    overflow: scroll;
-    overflow-x: hidden;
+
+}
+
+.messageEntry {
+    height: 8%;
 }
 
 .messages {
+    height: 92%;
     bottom: 0;
-
+    overflow: scroll;
+    overflow-x: hidden;
 }
 
 ul {
