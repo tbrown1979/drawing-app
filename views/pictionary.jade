@@ -10,7 +10,12 @@ head
       
   body(ng-controller="DrawingAppCtrl")
     h1 Canvas test
-    div.join(ng-show="!joined")
+    div.username(ng-show="!pickedUsername")
+      form.join(ng-model="usernameForm", name="usernameForm", ng-submit="chooseUsername(name)")
+        input(ng-model="username", class="username", ng-required="true", type="text", ng-minlength="1")
+        input(type="submit", value="Submit", ng-disabled="usernameForm.$invalid")
+
+    div.join(ng-show="!joined && pickedUsername")
       form.join(ng-model="formJoin", name="formJoin", ng-submit="join(groupName)")
         input(ng-model="groupName", class="groupName", ng-required="true", type="text", ng-minlength="1")
         input(type="submit", value="Join Group", ng-disabled="formJoin.$invalid")
