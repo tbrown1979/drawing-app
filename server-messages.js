@@ -31,8 +31,12 @@ module.exports = function(server) {
       socket.broadcast.in(socket.room).emit('addMsg', data);
     });
 
+    socket.on('setUsername', function(data) {
+      socket.username = data.username;
+    })
+
     socket.on('joinGroup', function(data) {
-      socket.username = "bleh";
+      // socket.username = "bleh";
       console.log(data);
       socket.room = data.name;
       socket.join(data.name);
