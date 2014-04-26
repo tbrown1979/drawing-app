@@ -14,7 +14,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   $scope.sendMsg = function (message) {
     $scope.messages.push(message);
     $scope.message = "";
-    socket.emit('msg', {msg: message});
+    socket.emit('msg', {msg: message, name: $scope.username});
   }
 
   $scope.join = function (groupName) {
@@ -23,6 +23,8 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   }
 
   $scope.chooseUsername = function (name) {
+    console.log("stuff");
+    $scope.username = name;
     socket.emit('setUsername', {username: name});
   }
 
