@@ -27,8 +27,8 @@ module.exports = function(server) {
     });
 
     socket.on('msg', function(data) {
-      console.log(socket.username);
-      socket.broadcast.in(socket.room).send('addMsg', data);
+      // console.log(socket.username);
+      io.sockets.in(socket.room).emit('addMsg', data);
     });
 
     socket.on('setUsername', function(data) {
@@ -41,7 +41,7 @@ module.exports = function(server) {
       socket.room = data.name;
       socket.join(data.name);
       console.log(data.name);
-      var message = socket.username + " is joining!";
+      var message = socket.username + " has joined!";
       socket.broadcast.in(data.name).emit('addMsg', {msg: message});
       console.log("broadcasting");
     });

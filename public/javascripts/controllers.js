@@ -37,7 +37,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   });
 
   socket.on('addMsg', function (data) {
-    console.log(data);
+    console.log("message received");
     $scope.messages.push(data);
   });
 
