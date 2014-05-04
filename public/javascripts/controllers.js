@@ -14,7 +14,9 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   $scope.sendMsg = function (message) {
     // $scope.messages.push({msg: message, name: $scope.username});
     $scope.message = "";
-    socket.emit('msg', {msg: message, name: $scope.username});
+    socket.emit('msg', {msg: message, 
+                        username: $scope.username,
+                        separator: ":"});
   }
 
   $scope.join = function (groupName) {
@@ -37,7 +39,11 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   });
 
   socket.on('addMsg', function (data) {
-    console.log("message received");
+    console.log(data);
+    $scope.messages.push(data);
+  });
+
+  socket.on('userJoinedGroup', function (data) {
     $scope.messages.push(data);
   });
 

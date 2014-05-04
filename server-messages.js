@@ -42,7 +42,7 @@ module.exports = function(server) {
       socket.join(data.name);
       console.log(data.name);
       var message = socket.username + " has joined!";
-      socket.broadcast.in(data.name).emit('addMsg', {msg: message});
+      socket.broadcast.in(data.name).emit('userJoinedGroup', {msg: message});
       console.log("broadcasting");
     });
   });

@@ -32,7 +32,7 @@ head
         div.messages
           ul
             li(ng-repeat="message in messages track by $index" ng-cloak="true")
-              |{{message.username}} {{message.msg}}
+              |{{message.username}}{{message.separator}} {{message.msg}}
 
 
     script(type='text/javascript' src='/javascripts/Pad.js')    
