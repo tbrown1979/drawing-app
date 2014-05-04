@@ -13,16 +13,16 @@ module.exports = function(server) {
 
   io.sockets.on('connection', function (socket) {
 
-    socket.on('draw', function(data) {
-      socket.broadcast.emit('draw', data);
-    });
+    // socket.on('draw', function(data) {
+    //   socket.broadcast.emit('draw', data);
+    // });
 
     // socket.on('my other event', function (data) {
     //   console.log(data);
     // });
 
     socket.on('draw', function(data) {
-      socket.broadcast.emit('draw', data);
+      socket.broadcast.in(socket.room).emit('draw', data);
     });
 
     socket.on('msg', function(data) {
