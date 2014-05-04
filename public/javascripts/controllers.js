@@ -47,4 +47,8 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
     $scope.messages.push(data);
   });
 
+  socket.on('disconnect', function(data){
+    //nothing here yet;
+  })
+
 }
