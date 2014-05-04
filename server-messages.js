@@ -6,7 +6,6 @@ module.exports = function(server) {
     io.enable('browser client etag');          // apply etag caching logic based on version number
     io.enable('browser client gzip');          // gzip the file
     io.set('log level', 1);                    // reduce logging
-    // enable all transports (optional if you want flashsocket)
     io.set('transports', [ 'websocket', 'flashsocket', 'htmlfile', 'xhr-polling', 'jsonp-polling']);
   });
 
@@ -27,7 +26,6 @@ module.exports = function(server) {
     });
 
     socket.on('msg', function(data) {
-      // console.log(socket.username);
       io.sockets.in(socket.room).emit('addMsg', data);
     });
 
@@ -40,11 +38,13 @@ module.exports = function(server) {
       socket.room = data.name;
       socket.join(data.name);
       var message = socket.username + " has joined!";
-      socket.broadcast.in(data.name).emit('userJoinedGroup', {msg: message});
+      socket.broadcast.in(data.name).emit('serverGroupMsg', {msg: message});
     })
 
     socket.on('disconnect', function(data) {
       console.log(socket.username);
+      var message = socket.username + " has left";
+      socket.broadcast.in(socket.room).emit('serverGroupMsg', {msg: message})
     })
   });
 }

@@ -43,7 +43,7 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
     $scope.messages.push(data);
   });
 
-  socket.on('userJoinedGroup', function (data) {
+  socket.on('serverGroupMsg', function (data) {
     $scope.messages.push(data);
   });
 
