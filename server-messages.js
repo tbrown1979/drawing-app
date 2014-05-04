@@ -42,9 +42,11 @@ module.exports = function(server) {
     })
 
     socket.on('disconnect', function(data) {
-      console.log(socket.username);
-      var message = socket.username + " has left";
-      socket.broadcast.in(socket.room).emit('serverGroupMsg', {msg: message})
+      console.log(socket.room);
+      if (typeof socket.room !== 'undefined') {
+        var message = socket.username + " has left";
+        socket.broadcast.in(socket.room).emit('serverGroupMsg', {msg: message})
+      }
     })
   });
 }
