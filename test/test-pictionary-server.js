@@ -63,6 +63,9 @@ describe("Chat Server",function(){
     var client1 = io.connect(socketURL, options);
     client1.on('connect', function(data) {
       client1.emit('setUsername', {username: chatUser1.name});
+      client1.on('setUsernameStatus', function(data){
+        data.status.should.equal(true);
+      });
       client1.emit('joinGroup', {name: "test"});
       var client2 = io.connect(socketURL, options);
       client2.on('connect', function(data) {
@@ -76,7 +79,14 @@ describe("Chat Server",function(){
         })
       });
     })
-    // client1.disconnect();
   })
 
+  // it('Should send disconnect msg to connected users when a user disconnects', function(done) {
+  //   var client1 = io.connect(socketURL, options);
+  //   client1.on('connect', function(data) {
+  //     client1.emit('setUsername', {username: chatUser1.name});
+  //     client.on('setUsernameStatus', function(data){
+  //       data.status.should.equal(true);
+  //     });
+  //     client.disconnect();
 })
