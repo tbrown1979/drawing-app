@@ -19,23 +19,30 @@ var msg1 = "Hello there"
 
 
 describe("Chat Server",function(){
-
-  /* Test 1 - A Single User */
   it('Should broadcast new user once they connect',function(done){
     var client = io.connect(socketURL, options);
     client.on('connect', function(data){
-      console.log("emitting");
       client.emit('msg',{msg: msg1});
     });
 
     client.on('addMsg',function(data){
-      console.log("MADE IT!");
       data.msg.should.equal(msg1);
-      /* If this client doesn't disconnect it will interfere 
-      with the next test */
       client.disconnect();
       done(); 
     });
-  });
+  })
+
+  it('Should allow user to set their username', function(done){
+    var client = io.connect(socketURL, options);
+    client.on('connect', function(data){
+      client.emit('setUsername', {username: chatUser1.name});
+    });
+
+    client.on('setUsernameStatus', function(data){
+      data.status.should.equal(true);
+      client.disconnect();
+      done();
+    })
+  })
 
 })

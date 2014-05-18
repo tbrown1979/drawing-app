@@ -12,7 +12,6 @@ module.exports = function(server) {
   require('./public/javascripts/Pad.js');
 
   io.sockets.on('connection', function (socket) {
-    console.log("starting up");
     // socket.on('draw', function(data) {
     //   socket.broadcast.emit('draw', data);
     // });
@@ -26,12 +25,12 @@ module.exports = function(server) {
     });
 
     socket.on('msg', function(data) {
-      console.log("test");
       io.sockets.in(socket.room).emit('addMsg', data);
     });
 
     socket.on('setUsername', function(data) {
       socket.username = data.username;
+      socket.emit('setUsernameStatus', {status: true});
     })
 
     socket.on('joinGroup', function(data) {
