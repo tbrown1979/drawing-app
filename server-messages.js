@@ -11,6 +11,8 @@ module.exports = function(server) {
 
   require('./public/javascripts/Pad.js');
 
+  var usernames = {};
+
   io.sockets.on('connection', function (socket) {
     // socket.on('draw', function(data) {
     //   socket.broadcast.emit('draw', data);
@@ -26,8 +28,13 @@ module.exports = function(server) {
 
     //need to check if username exists
     socket.on('setUsername', function(data) {
+      if (typeof(usernames[data.username]) !== 'undefined') {
+        socket.emit('setUsernameStatus', {status: false});
+      } else {
       socket.username = data.username;
+      usernames[data.username] = true;
       socket.emit('setUsernameStatus', {status: true});
+      }
     })
 
     //need to check if group name exists, if so return true status, if not
@@ -42,6 +49,7 @@ module.exports = function(server) {
 
     socket.on('disconnect', function(data) {
       console.log(socket.room);
+      delete usernames[socket.username];
       if (typeof socket.room !== 'undefined') {
         var message = socket.username + " has left";
         socket.broadcast.in(socket.room).emit('serverGroupMsg', {msg: message})
