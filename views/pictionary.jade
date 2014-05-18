@@ -8,14 +8,16 @@ head
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js')
 
       
-  body(ng-controller="DrawingAppCtrl")
+  body(ng-controller="DrawingAppCtrl" ng-cloak)
     h1 Canvas test
-    div.usernameEntry(ng-show="!usernameEntry")
-      form.join(ng-model="usernameForm", name="usernameForm", ng-submit="chooseUsername(name)")
+    div.usernameChosen(ng-show="!usernameChosen")
+      form.join(ng-model="usernameForm", name="usernameForm", ng-submit="chooseUsername(username)")
         input(ng-model="username", class="username", ng-required="true", type="text", ng-minlength="1")
         input(type="submit", value="Submit", ng-disabled="usernameForm.$invalid")
+        label(ng-hide="!usernameError")
+          |That username is already taken.
 
-    div.join(ng-show="!joined && usernameEntry" ng-cloak)
+    div.join(ng-show="!joined && usernameChosen" ng-cloak)
       form.join(ng-model="formJoin", name="formJoin", ng-submit="join(groupName)")
         input(ng-model="groupName", class="groupName", ng-required="true", type="text", ng-minlength="1")
         input(type="submit", value="Join Group", ng-disabled="formJoin.$invalid")

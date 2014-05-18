@@ -6,7 +6,9 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   $scope.message;
   $scope.messages = [];
   $scope.joined = false;
+  $scope.usernameError = false;
   $scope.username;
+  $scope.usernameChosen = false;
 
 
   drawingPad.initialize(socket);
@@ -35,9 +37,12 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
 
   socket.on('setUsernameStatus', function(data) {
     if (data.status === true) {
+      console.log(data);
       $scope.username = data.name;
+      $scope.usernameChosen = true;
     } else {
-      console.log($scope.username);
+      // console.log($scope.username);
+      $scope.usernameError = true;
       $scope.username = "";
     }
   })

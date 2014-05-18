@@ -23,11 +23,13 @@ module.exports = function(server) {
     });
 
     socket.on('msg', function(data) {
+      console.log(usernames);
       io.sockets.in(socket.room).emit('addMsg', data);
     });
 
     //need to check if username exists
     socket.on('setUsername', function(data) {
+      console.log(data);
       if (typeof(usernames[data.username]) !== 'undefined') {
         socket.emit('setUsernameStatus', {status: false, name: data.username});
       } else {

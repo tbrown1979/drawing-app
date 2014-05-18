@@ -65,6 +65,7 @@ describe("Chat Server",function(){
       client1.emit('setUsername', {username: chatUser1.name});
       client1.on('setUsernameStatus', function(data){
         data.status.should.equal(true);
+        data.name.should.equal(chatUser1.name);
       });
       client1.emit('joinGroup', {name: "test"});
       var client2 = io.connect(socketURL, options);
