@@ -29,11 +29,11 @@ module.exports = function(server) {
     //need to check if username exists
     socket.on('setUsername', function(data) {
       if (typeof(usernames[data.username]) !== 'undefined') {
-        socket.emit('setUsernameStatus', {status: false});
+        socket.emit('setUsernameStatus', {status: false, name: data.username});
       } else {
       socket.username = data.username;
       usernames[data.username] = true;
-      socket.emit('setUsernameStatus', {status: true});
+      socket.emit('setUsernameStatus', {status: true, name: data.username});
       }
     })
 
@@ -44,7 +44,7 @@ module.exports = function(server) {
       socket.join(data.name);
       var message = socket.username + " has joined!";
       socket.broadcast.in(data.name).emit('serverGroupMsg', {msg: message});
-      socket.emit('joinGroupStatus', {status: true});
+      socket.emit('joinGroupStatus', {status: true, name: data.name});
     })
 
     socket.on('disconnect', function(data) {

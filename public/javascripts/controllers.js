@@ -25,14 +25,22 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
   }
 
   $scope.chooseUsername = function (name) {
-    console.log("stuff");
-    $scope.username = name;
+    console.log("username chosen");
     socket.emit('setUsername', {username: name});
   }
 
   // socket.on('joinRoom', function(newRoom) {
 
   // })
+
+  socket.on('setUsernameStatus', function(data) {
+    if (data.status === true) {
+      $scope.username = data.name;
+    } else {
+      console.log($scope.username);
+      $scope.username = "";
+    }
+  })
 
   socket.on('draw', function (data) {
     drawingPad.drawLineFrom( data.begin, data.end );
