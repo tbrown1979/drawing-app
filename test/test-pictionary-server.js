@@ -45,4 +45,38 @@ describe("Chat Server",function(){
     })
   })
 
+  it('Should allow user to join group', function(done) {
+    var client = io.connect(socketURL, options);
+    client.on('connect', function(data){
+      client.emit('setUsername', {username: chatUser1.name});
+      client.emit('joinGroup', {name: "test"});
+    });
+
+    client.on('joinGroupStatus', function(data) {
+      data.status.should.equal(true);
+      client.disconnect();
+      done();
+    })
+  })
+
+  it('Should send disconnect msg to connected users when a user disconnects', function(done) {
+    var client1 = io.connect(socketURL, options);
+    client1.on('connect', function(data) {
+      client1.emit('setUsername', {username: chatUser1.name});
+      client1.emit('joinGroup', {name: "test"});
+      var client2 = io.connect(socketURL, options);
+      client2.on('connect', function(data) {
+        client2.emit('setUsername', {username: chatUser2.name});
+        client2.emit('joinGroup', {name: "test"});
+        client1.disconnect();
+        client2.on('serverGroupMsg', function(data){
+          data.msg.should.equal(chatUser1.name + " has left");
+          client2.disconnect();
+          done();
+        })
+      });
+    })
+    // client1.disconnect();
+  })
+
 })

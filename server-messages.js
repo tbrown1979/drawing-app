@@ -16,10 +16,6 @@ module.exports = function(server) {
     //   socket.broadcast.emit('draw', data);
     // });
 
-    // socket.on('my other event', function (data) {
-    //   console.log(data);
-    // });
-
     socket.on('draw', function(data) {
       socket.broadcast.in(socket.room).emit('draw', data);
     });
@@ -28,17 +24,20 @@ module.exports = function(server) {
       io.sockets.in(socket.room).emit('addMsg', data);
     });
 
+    //need to check if username exists
     socket.on('setUsername', function(data) {
       socket.username = data.username;
       socket.emit('setUsernameStatus', {status: true});
     })
 
+    //need to check if group name exists, if so return true status, if not
+    //return false.
     socket.on('joinGroup', function(data) {
-      // socket.username = "bleh";
       socket.room = data.name;
       socket.join(data.name);
       var message = socket.username + " has joined!";
       socket.broadcast.in(data.name).emit('serverGroupMsg', {msg: message});
+      socket.emit('joinGroupStatus', {status: true});
     })
 
     socket.on('disconnect', function(data) {
