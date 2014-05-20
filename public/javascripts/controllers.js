@@ -31,10 +31,6 @@ function DrawingAppCtrl($scope, socket, drawingPad) {
     socket.emit('setUsername', {username: name});
   }
 
-  // socket.on('joinRoom', function(newRoom) {
-
-  // })
-
   socket.on('setUsernameStatus', function(data) {
     if (data.status === true) {
       console.log(data);
